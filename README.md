@@ -33,7 +33,16 @@ python -m src.create_db
 ```
 
 ### Migrate data
+> You will need to copy the csv file to want to migrate in the root directory of this project.
 Run this command to migrate the data from csv to the database engine
 ```bash
 python -m src.migrate_data
 ```
+
+## Data analysis
+To run the data analysis scripts, run the following command:
+```bash
+marimo edit
+```
+
+For more information on how to use this notebook, check the [documentation](https://docs.marimo.io)
