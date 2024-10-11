@@ -20,7 +20,7 @@ def __(mo):
 
 @app.cell
 def __(pd):
-    df_0 = pd.read_csv('nl_data.csv')
+    df_0 = pd.read_csv('data_qc.csv')
     return df_0,
 
 
@@ -44,8 +44,8 @@ def __(df_0, np, pd):
     df.replace('Unavailable', '', inplace=True)
     df['valid_from'] = pd.to_numeric(df['valid_from'], errors='coerce')
     df['valid_to'] = pd.to_numeric(df['valid_to'], errors='coerce')
-    df['database_host'] = ''
-    df['referenced_database'] = ''
+    # df['database_host'] = ''
+    # df['referenced_database'] = ''
     df['creation_date'] = pd.to_datetime(df['creation_date'], format='mixed', dayfirst=True)
     df['last_updated'] = pd.to_datetime(df['last_updated'], format='mixed', dayfirst=True)
     df[['individualized_data', 'identifiable_individuals', 'indigenous_data', 'indigenous_community_permission']] = df[['individualized_data', 'identifiable_individuals', 'indigenous_data', 'indigenous_community_permission']].replace({'Yes': True, 'No': False})

@@ -3,7 +3,7 @@ import numpy as np
 from .models import *
 from .utils import *
 
-df_0 = pd.read_csv('nl_data.csv')
+df_0 = pd.read_csv('data_qc.csv')
 
 def clean_text(x):
     if isinstance(x, str):  # Check if the value is a string
@@ -43,13 +43,13 @@ df.replace({np.nan: None}, inplace=True)
 # first_entry = df.iloc[0]
 for i in range(len(df)):
     first_entry = df.iloc[i]
-    data_formats = list(map(find_or_create_data_format, first_entry['data_format'].split(', ')))
-    data_types = list(map(find_or_create_data_type, first_entry['data_type'].split(', ')))
+    data_formats = list(map(find_or_create_data_format, first_entry['data_format'].split(', ') if first_entry['data_format'] else []))
+    data_types = list(map(find_or_create_data_type, first_entry['data_type'].split(', ') if first_entry['data_type'] else []))
     # print(first_entry)
-    print(data_formats[0])
+    # print(data_formats[0])
     print(list(data_types))
 
-    languages = list(map(find_or_create_language, first_entry['language'].split(', ')))
+    languages = list(map(find_or_create_language, first_entry['language'].split(', ') if first_entry['language'] else []))
     print(languages)
 
     theme = find_or_create_theme(first_entry['theme'])
@@ -59,10 +59,10 @@ for i in range(len(df)):
     location = process_location(first_entry['location_relevance'])
 
     contact = process_contact(first_entry['contact_type'], first_entry['contact_detail'])
-    # admin = process_entity(first_entry['maintenance'])
+    admin = process_entity(first_entry['maintenance'])
     owner = process_entity(first_entry['database_owner']) if first_entry['database_owner'] else None
     sponsor = process_entity_sponsor(first_entry['sponsor'], first_entry['type_entity']) if first_entry['database_owner'] else None
-    # host = process_entity(first_entry['database_host'])
+    host = process_entity(first_entry['database_host'])
 
     print(first_entry['limits_of_use'])
     metadata = Metadata(
@@ -72,9 +72,9 @@ for i in range(len(df)):
         description=first_entry['description'],
         valid_from=first_entry['valid_from'],
         valid_to=first_entry['valid_to'],
-        visibility=first_entry['visibility'],
+        visibility=None,#first_entry['visibility'],
         access_type=first_entry['access_type'],
-        usage_url=first_entry['user_guide_url'],
+        usage_url=first_entry['user_guide_url'] if first_entry['user_guide_url'] else '',
         license=first_entry['license'],
         usage_limit=first_entry['limits_of_use'] if ['limits_of_use'] else '',
         location_id=location.id,
@@ -83,8 +83,8 @@ for i in range(len(df)):
         languages=languages,
         theme_id=theme.id,
         discipline_id=discipline.id if discipline else None,
-        host_id=None,
-        admin_id=None, # admin.id
+        host_id=host.id,#None,
+        admin_id=admin.id,#None, # admin.id
         owner_id=owner.id if owner else None,
         contact_id=contact.id if contact else None,
     )

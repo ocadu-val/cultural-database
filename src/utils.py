@@ -59,12 +59,12 @@ def find_or_create_language(name: str):
         session.refresh(language)
         return language
 
-def find_or_create_theme(name: str):
+def find_or_create_theme(name: Optional[str]):
     with Session(engine) as session:
         theme = session.exec(select(Theme).where(Theme.name == name)).first()
         if (theme  is not None):
             return theme
-        theme = Theme(name=name)
+        theme = Theme(name=name if name else 'Other')
         session.add(theme)
         session.commit()
         session.refresh(theme)
@@ -123,8 +123,8 @@ def find_or_create_location(country: str, province: Optional[str] = None, city: 
         return location
 
 def process_location(location_relevance: str):
-    if location_relevance in ['Canada', 'Newfoundland and Labrador']:
-        location = find_or_create_location('CA', 'NL')
+    if location_relevance in ['Canada', 'Quebec', 'Québec']:
+        location = find_or_create_location('CA', 'QC')
         return location
     location = Location(country='CA', province='NL', region=location_relevance)
     return location
